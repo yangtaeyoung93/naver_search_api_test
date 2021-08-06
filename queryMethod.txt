@@ -1,0 +1,60 @@
+// 쿼리 메소드
+
+Spring Data JPA에서 제공하는 것으로, 메소드의 이름만으로 원하는 질의를 실행할 수 있지만 여기서 쿼리라는 용어는 'SELECT'에만 해당한다.
+
+
+ex) find...By... read...By... query...By... get...By... count...By...
+
+find...By..로 쿼리 메소드를 만든다면 find 뒤에 Entity 타입을 지정한다. 
+예를 들어 Board클래스라면 findBoardBy...가 된다.
+
+By 뒤쪽에는 컬럼명을 이용해서 구성한다.
+
+
+import com.example.jpa.bookmanager.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+//<entity 타입 , User의 pk>
+public interface UserRepository extends JpaRepository<User, Long> {
+        User findByName(String name);
+        User searchByName(String name);
+        User readByName(String name);
+        User streamByName(String name);
+        User findUserByName(String name);
+        User findSomethingByName(String name);
+}
+
+
+//TestCode
+
+import com.example.jpa.bookmanager.domain.User;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+
+@SpringBootTest //spring context로딩
+class UserRepositoryTest {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Test
+    void crud(){
+        userRepository.save(new User());
+       userRepository.findAll().forEach(System.out::println);
+    }
+
+    @Test
+    void select(){
+
+
+        System.out.println("findByName : " + userRepository.findByName("yang"));
+        System.out.println("searchByName : " + userRepository.searchByName("yang"));
+        System.out.println("readByName : " + userRepository.readByName("yang"));
+        System.out.println("streamByName : " + userRepository.streamByName("yang"));
+        System.out.println("findUserByName : " + userRepository.findUserByName("yang"));
+        System.out.println("findSomethingByName : " + userRepository.findSomethingByName("yang"));
+    }
+}
